@@ -3,21 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="產品效益模擬器 Demo" />
-  <title>產品效益模擬器</title>
+  <meta name="description" content="安喜培 1-MCP 保鮮效果 Demo" />
+  <title>安喜培 1-MCP 保鮮效果 Demo</title>
   <style>
     :root {
       --bg: #f4f7f3;
       --card: #ffffff;
-      --text: #183028;
-      --muted: #61736c;
-      --primary: #2d7a55;
+      --text: #173127;
+      --muted: #65766e;
+      --primary: #2f7d57;
       --primary-dark: #205c40;
-      --border: #dce6df;
-      --soft: #eaf4ed;
-      --warning: #805b12;
-      --warning-bg: #fff6d8;
-      --shadow: 0 14px 35px rgba(24, 48, 40, 0.10);
+      --border: #dce7df;
+      --soft: #edf6ef;
+      --warning-bg: #fff6d9;
+      --warning-border: #ead99b;
+      --warning-text: #76550f;
+      --danger-bg: #fff0ec;
+      --danger-text: #8b3e2f;
+      --shadow: 0 16px 38px rgba(24, 48, 40, 0.10);
     }
 
     * { box-sizing: border-box; }
@@ -25,17 +28,17 @@
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top left, rgba(74, 150, 106, 0.16), transparent 32%),
+        radial-gradient(circle at top left, rgba(69, 146, 101, 0.17), transparent 31%),
         var(--bg);
     }
 
     .page {
-      width: min(1040px, calc(100% - 32px));
+      width: min(1120px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 52px 0;
+      padding: 46px 0;
     }
 
     .hero {
@@ -46,28 +49,28 @@
       margin: 0 0 10px;
       color: var(--primary);
       font-size: 0.82rem;
-      font-weight: 800;
-      letter-spacing: 0.13em;
+      font-weight: 850;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(2rem, 5vw, 3.8rem);
-      line-height: 1.05;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.08;
     }
 
     .subtitle {
-      max-width: 720px;
+      max-width: 820px;
       margin: 16px 0 0;
       color: var(--muted);
-      font-size: 1.05rem;
+      font-size: 1rem;
       line-height: 1.8;
     }
 
     .layout {
       display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+      grid-template-columns: minmax(0, 0.95fr) minmax(380px, 1.05fr);
       gap: 24px;
       align-items: start;
     }
@@ -76,12 +79,12 @@
       padding: 28px;
       border: 1px solid var(--border);
       border-radius: 24px;
-      background: rgba(255, 255, 255, 0.96);
+      background: rgba(255, 255, 255, 0.97);
       box-shadow: var(--shadow);
     }
 
     .card h2 {
-      margin: 0 0 20px;
+      margin: 0 0 22px;
       font-size: 1.25rem;
     }
 
@@ -108,16 +111,15 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       color: var(--text);
-      background-color: #fff;
+      background: #fff;
       font: inherit;
       cursor: pointer;
-      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     select:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(45, 122, 85, 0.13);
+      box-shadow: 0 0 0 4px rgba(47, 125, 87, 0.13);
     }
 
     button {
@@ -126,12 +128,12 @@
       padding: 15px 18px;
       border: 0;
       border-radius: 14px;
-      color: white;
+      color: #fff;
       background: var(--primary);
       font: inherit;
-      font-weight: 800;
+      font-weight: 850;
       cursor: pointer;
-      transition: transform 0.2s, background 0.2s;
+      transition: background 0.2s, transform 0.2s;
     }
 
     button:hover {
@@ -139,9 +141,21 @@
       transform: translateY(-1px);
     }
 
+    .input-note,
+    .disclaimer {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border: 1px solid var(--warning-border);
+      border-radius: 14px;
+      color: var(--warning-text);
+      background: var(--warning-bg);
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+
     .result-empty {
       display: grid;
-      min-height: 360px;
+      min-height: 430px;
       place-items: center;
       color: var(--muted);
       text-align: center;
@@ -154,107 +168,123 @@
 
     .status {
       display: inline-flex;
-      align-items: center;
-      gap: 8px;
       padding: 8px 12px;
       border-radius: 999px;
-      background: var(--soft);
       color: var(--primary-dark);
+      background: var(--soft);
       font-size: 0.9rem;
-      font-weight: 800;
+      font-weight: 850;
     }
 
-    .score-row {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 18px;
-      margin: 24px 0 16px;
-    }
-
-    .score {
-      font-size: 3.3rem;
-      font-weight: 900;
-      line-height: 1;
-    }
-
-    .score small {
-      margin-left: 4px;
-      color: var(--muted);
-      font-size: 1rem;
-      font-weight: 650;
-    }
-
-    .meter {
-      height: 12px;
-      overflow: hidden;
-      border-radius: 999px;
-      background: #e4ebe6;
-    }
-
-    .meter-fill {
-      width: 0;
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, #8abf72, #2d7a55);
-      transition: width 0.45s ease;
-    }
-
-    .result-grid {
+    .headline-results {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
       margin-top: 22px;
     }
 
-    .metric {
-      padding: 16px;
-      border-radius: 16px;
-      background: var(--soft);
+    .result-box {
+      padding: 22px 18px;
+      border: 1px solid #d7e8dc;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #f7fcf8, #edf6ef);
     }
 
-    .metric span {
+    .result-box span {
       display: block;
       color: var(--muted);
-      font-size: 0.82rem;
+      font-size: 0.86rem;
     }
 
-    .metric strong {
+    .result-box strong {
+      display: block;
+      margin-top: 8px;
+      font-size: clamp(1.75rem, 4vw, 2.45rem);
+      line-height: 1.15;
+    }
+
+    .result-box small {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .comparison {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .comparison-item {
+      padding: 14px;
+      border-radius: 15px;
+      background: #f7f9f7;
+      text-align: center;
+    }
+
+    .comparison-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .comparison-item strong {
       display: block;
       margin-top: 5px;
-      font-size: 1.06rem;
+      font-size: 1.1rem;
     }
 
-    .notes {
-      margin: 20px 0 0;
-      padding-left: 20px;
+    .summary {
+      margin-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .summary-row span {
       color: var(--muted);
-      line-height: 1.75;
     }
 
-    .notice {
-      margin-top: 24px;
+    .summary-row strong {
+      text-align: right;
+    }
+
+    .temperature-warning {
+      margin-top: 18px;
       padding: 14px 16px;
-      border: 1px solid #ead99b;
       border-radius: 14px;
-      color: var(--warning);
-      background: var(--warning-bg);
+      color: var(--danger-text);
+      background: var(--danger-bg);
       font-size: 0.88rem;
       line-height: 1.65;
+    }
+
+    .temperature-warning[hidden] {
+      display: none;
     }
 
     footer {
       margin-top: 26px;
       color: var(--muted);
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       text-align: center;
     }
 
-    @media (max-width: 780px) {
-      .page { padding: 32px 0; }
+    @media (max-width: 820px) {
+      .page { padding: 30px 0; }
       .layout { grid-template-columns: 1fr; }
-      .field-grid { grid-template-columns: 1fr; }
+      .field-grid,
+      .headline-results { grid-template-columns: 1fr; }
       .field.full { grid-column: auto; }
+      .comparison { grid-template-columns: 1fr; }
       .card { padding: 22px; border-radius: 20px; }
     }
   </style>
@@ -262,50 +292,79 @@
 <body>
   <main class="page">
     <header class="hero">
-      <p class="eyebrow">Interactive Product Demo</p>
-      <h1>產品效益模擬器</h1>
+      <p class="eyebrow">AnsiP 1-MCP Demo</p>
+      <h1>安喜培保鮮效果查詢</h1>
       <p class="subtitle">
-        選擇作物、裝箱重量、箱體大小、材質與儲藏溫度，
-        即可查看示範性的適用性評估與產品配置建議。
+        選擇作物與使用情境後，右側顯示文件中的 1-MCP 試驗濃度、
+        處理時間及安喜培組維持品質的天數。
       </p>
     </header>
 
     <section class="layout">
       <form class="card" id="demoForm">
-        <h2>輸入使用條件</h2>
+        <h2>選擇使用條件</h2>
 
         <div class="field-grid">
           <div class="field full">
             <label for="crop">作物</label>
-            <select id="crop" required></select>
+            <select id="crop">
+              <option value="indian-jujube">印度棗</option>
+              <option value="tomato">蕃茄</option>
+              <option value="pineapple">鳳梨</option>
+              <option value="phalaenopsis">蝴蝶蘭（盆花）</option>
+            </select>
           </div>
 
           <div class="field">
             <label for="weight">作物重量</label>
-            <select id="weight" required></select>
+            <select id="weight">
+              <option value="4.2">4.2 kg</option>
+              <option value="5">5 kg</option>
+              <option value="10">10 kg</option>
+              <option value="15">15 kg</option>
+              <option value="20">20 kg</option>
+            </select>
           </div>
 
           <div class="field">
             <label for="boxSize">箱子大小</label>
-            <select id="boxSize" required></select>
+            <select id="boxSize">
+              <option value="33x27x11">33 × 27 × 11 cm</option>
+              <option value="40x30x20">40 × 30 × 20 cm</option>
+              <option value="50x35x25">50 × 35 × 25 cm</option>
+              <option value="60x40x30">60 × 40 × 30 cm</option>
+            </select>
           </div>
 
           <div class="field">
             <label for="material">箱子材質</label>
-            <select id="material" required></select>
+            <select id="material">
+              <option value="standard-box">Standard Box／一般紙箱</option>
+              <option value="vented-carton">開孔瓦楞紙箱</option>
+              <option value="carton-liner">紙箱＋Liner Bag</option>
+              <option value="plastic-crate">塑膠周轉箱</option>
+              <option value="foam-box">保麗龍箱</option>
+            </select>
           </div>
 
           <div class="field">
             <label for="temperature">儲藏溫度</label>
-            <select id="temperature" required></select>
+            <select id="temperature">
+              <option value="25">25°C</option>
+              <option value="23">23°C</option>
+              <option value="15">15°C</option>
+              <option value="8">8°C</option>
+              <option value="5">5°C</option>
+              <option value="not-stated">文件未註明</option>
+            </select>
           </div>
         </div>
 
-        <button type="submit">查看模擬結果</button>
+        <button type="submit">顯示文件結果</button>
 
-        <div class="notice">
-          此版本使用示意參數，不能直接作為產品宣稱、標示、用量或保存期限依據。
-          正式公開前，請以實際試驗結果取代 JavaScript 中的示範公式。
+        <div class="input-note">
+          原文件沒有依作物重量、箱子尺寸或箱子材質分組比較，因此這三項目前僅作為
+          Demo 操作欄位，不會改變右側的試驗濃度與維持天數。
         </div>
       </form>
 
@@ -313,216 +372,230 @@
         <div class="result-empty" id="emptyState">
           <div>
             <strong>尚未產生結果</strong><br />
-            請先選擇左側條件，再按下「查看模擬結果」。
+            請先選擇左側條件，再按下「顯示文件結果」。
           </div>
         </div>
 
         <div class="result-content" id="resultContent" hidden>
-          <span class="status" id="statusText">● 適用性良好</span>
+          <span class="status" id="statusText">文件試驗資料</span>
 
-          <div class="score-row">
-            <div>
-              <div class="score"><span id="score">0</span><small>/ 100</small></div>
-              <div style="margin-top:8px;color:var(--muted)">示範效益指數</div>
+          <div class="headline-results">
+            <div class="result-box">
+              <span>1-MCP 試驗濃度</span>
+              <strong><span id="ppmValue">—</span> ppm</strong>
+              <small id="ppbValue">— ppb</small>
+            </div>
+
+            <div class="result-box">
+              <span id="daysLabel">安喜培組維持天數</span>
+              <strong><span id="daysValue">—</span> 天</strong>
+              <small id="qualityMetric">—</small>
             </div>
           </div>
 
-          <div class="meter" aria-hidden="true">
-            <div class="meter-fill" id="meterFill"></div>
-          </div>
-
-          <div class="result-grid">
-            <div class="metric">
-              <span>建議產品數量</span>
-              <strong id="units">—</strong>
+          <div class="comparison">
+            <div class="comparison-item">
+              <span>對照組</span>
+              <strong id="controlDays">— 天</strong>
             </div>
-            <div class="metric">
-              <span>預估適用期間</span>
-              <strong id="duration">—</strong>
+            <div class="comparison-item">
+              <span>安喜培組</span>
+              <strong id="treatedDays">— 天</strong>
             </div>
-            <div class="metric">
-              <span>裝載密度</span>
-              <strong id="density">—</strong>
-            </div>
-            <div class="metric">
-              <span>主要影響因子</span>
-              <strong id="mainFactor">—</strong>
+            <div class="comparison-item">
+              <span>文件列示改進</span>
+              <strong id="improvement">—</strong>
             </div>
           </div>
 
-          <ul class="notes" id="notes"></ul>
+          <div class="summary">
+            <div class="summary-row">
+              <span>作物</span>
+              <strong id="cropSummary">—</strong>
+            </div>
+            <div class="summary-row">
+              <span>薰蒸時間</span>
+              <strong id="fumigationHours">—</strong>
+            </div>
+            <div class="summary-row">
+              <span>試驗儲藏條件</span>
+              <strong id="trialTemperature">—</strong>
+            </div>
+            <div class="summary-row">
+              <span>使用者選擇溫度</span>
+              <strong id="selectedTemperature">—</strong>
+            </div>
+            <div class="summary-row">
+              <span>試驗場所</span>
+              <strong id="institution">—</strong>
+            </div>
+            <div class="summary-row">
+              <span>其他試驗條件</span>
+              <strong id="note">—</strong>
+            </div>
+            <div class="summary-row">
+              <span>Demo 重量／箱體</span>
+              <strong id="scenarioSummary">—</strong>
+            </div>
+          </div>
+
+          <div class="temperature-warning" id="temperatureWarning" hidden></div>
+
+          <div class="disclaimer">
+            此頁呈現的是特定試驗條件下的文件結果，不代表所有重量、箱體、材質與實際物流環境
+            都能得到相同效果，也不應直接視為產品標示或保證保存期限。
+          </div>
         </div>
       </article>
     </section>
 
     <footer>
-      Demo only · 請依產品試驗資料、標示與當地法規確認正式內容
+      Demo only · 資料取自「安喜培效果一覽表」
     </footer>
   </main>
 
   <script>
     /*
-      ========================================
-      1. 下拉選單資料：可直接修改這一區
-      ========================================
+      文件資料：
+      印度棗：900 ppb，12 hr；對照 6 天，安喜培 15 天；褐化；25°C；改進 150%
+      蕃茄：900 ppb，12 hr；對照 9 天，安喜培 15 天；軟化；25°C；改進 60%
+      鳳梨：900 ppb，12 hr；對照 5 天，安喜培 7 天；黃化；25°C；改進 40%
+      蝴蝶蘭（盆花）：3.44 ppb，8 hr；對照 4.3 天，安喜培 25.6 天；
+                      保鮮天數；以 3.2 ppm 乙烯處理；改進 495%
     */
-    const options = {
-      crops: [
-        { value: "grape", label: "葡萄", baseScore: 88, duration: "14–21 天" },
-        { value: "tomato", label: "番茄", baseScore: 82, duration: "10–14 天" },
-        { value: "mango", label: "芒果", baseScore: 80, duration: "10–14 天" },
-        { value: "pepper", label: "辣椒", baseScore: 84, duration: "14–21 天" },
-        { value: "broccoli", label: "青花菜", baseScore: 76, duration: "7–10 天" }
-      ],
-      weights: [2, 5, 10, 15, 20],
-      boxSizes: [10, 20, 30, 40, 60],
-      materials: [
-        { value: "carton", label: "瓦楞紙箱", scoreAdjust: -4, doseFactor: 1.15 },
-        { value: "plastic", label: "塑膠周轉箱", scoreAdjust: -2, doseFactor: 1.10 },
-        { value: "foam", label: "保麗龍箱", scoreAdjust: 5, doseFactor: 0.95 },
-        { value: "sealed", label: "高阻隔密封箱／袋", scoreAdjust: 8, doseFactor: 0.85 }
-      ],
-      temperatures: [
-        { value: 25, label: "25°C（常溫）", scoreAdjust: -12 },
-        { value: 15, label: "15°C", scoreAdjust: -5 },
-        { value: 10, label: "10°C", scoreAdjust: 1 },
-        { value: 5, label: "5°C", scoreAdjust: 6 },
-        { value: 0, label: "0°C", scoreAdjust: 4 }
-      ]
+    const cropData = {
+      "indian-jujube": {
+        label: "印度棗",
+        concentrationPpb: 900,
+        fumigationHours: 12,
+        controlDays: 6,
+        treatedDays: 15,
+        improvement: "150%",
+        metric: "褐化",
+        trialTemperature: "25°C",
+        trialTemperatureValue: "25",
+        institution: "中興大學",
+        note: "置於 25°C"
+      },
+      "tomato": {
+        label: "蕃茄",
+        concentrationPpb: 900,
+        fumigationHours: 12,
+        controlDays: 9,
+        treatedDays: 15,
+        improvement: "60%",
+        metric: "軟化",
+        trialTemperature: "25°C",
+        trialTemperatureValue: "25",
+        institution: "中興大學",
+        note: "置於 25°C"
+      },
+      "pineapple": {
+        label: "鳳梨",
+        concentrationPpb: 900,
+        fumigationHours: 12,
+        controlDays: 5,
+        treatedDays: 7,
+        improvement: "40%",
+        metric: "黃化",
+        trialTemperature: "25°C",
+        trialTemperatureValue: "25",
+        institution: "中興大學",
+        note: "置於 25°C"
+      },
+      "phalaenopsis": {
+        label: "蝴蝶蘭（盆花）",
+        concentrationPpb: 3.44,
+        fumigationHours: 8,
+        controlDays: 4.3,
+        treatedDays: 25.6,
+        improvement: "495%",
+        metric: "保鮮天數",
+        trialTemperature: "文件未註明",
+        trialTemperatureValue: "not-stated",
+        institution: "台灣大學",
+        note: "以 3.2 ppm 乙烯處理"
+      }
+    };
+
+    const materialLabels = {
+      "standard-box": "一般紙箱",
+      "vented-carton": "開孔瓦楞紙箱",
+      "carton-liner": "紙箱＋Liner Bag",
+      "plastic-crate": "塑膠周轉箱",
+      "foam-box": "保麗龍箱"
     };
 
     const cropEl = document.querySelector("#crop");
-    const weightEl = document.querySelector("#weight");
-    const boxSizeEl = document.querySelector("#boxSize");
-    const materialEl = document.querySelector("#material");
     const temperatureEl = document.querySelector("#temperature");
 
-    function addOptions(select, items, getValue, getLabel) {
-      items.forEach(item => {
-        const option = document.createElement("option");
-        option.value = getValue(item);
-        option.textContent = getLabel(item);
-        select.appendChild(option);
-      });
+    function syncTemperatureToCrop() {
+      const data = cropData[cropEl.value];
+      temperatureEl.value = data.trialTemperatureValue;
     }
 
-    addOptions(cropEl, options.crops, item => item.value, item => item.label);
-    addOptions(weightEl, options.weights, item => item, item => `${item} kg`);
-    addOptions(boxSizeEl, options.boxSizes, item => item, item => `${item} L`);
-    addOptions(materialEl, options.materials, item => item.value, item => item.label);
-    addOptions(
-      temperatureEl,
-      options.temperatures,
-      item => item.value,
-      item => item.label
-    );
+    cropEl.addEventListener("change", syncTemperatureToCrop);
+    syncTemperatureToCrop();
 
-    /*
-      ========================================
-      2. 示範計算公式：正式使用時請換成試驗資料
-      ========================================
-    */
-    function calculateDemo() {
-      const crop = options.crops.find(item => item.value === cropEl.value);
-      const weight = Number(weightEl.value);
-      const boxSize = Number(boxSizeEl.value);
-      const material = options.materials.find(item => item.value === materialEl.value);
-      const temperature = options.temperatures.find(
-        item => item.value === Number(temperatureEl.value)
-      );
-
-      // kg/L。僅用於呈現裝載密度的概念。
-      const density = weight / boxSize;
-
-      let densityAdjust = 0;
-      let densityText = "中等";
-      if (density > 0.5) {
-        densityAdjust = -12;
-        densityText = "偏高";
-      } else if (density > 0.3) {
-        densityAdjust = -5;
-        densityText = "中高";
-      } else if (density < 0.12) {
-        densityAdjust = -3;
-        densityText = "偏低";
-      }
-
-      let score =
-        crop.baseScore +
-        material.scoreAdjust +
-        temperature.scoreAdjust +
-        densityAdjust;
-
-      score = Math.max(35, Math.min(98, Math.round(score)));
-
-      // 假設每 20 L 使用一個產品單位；材質會影響示範用量。
-      const units = Math.max(1, Math.ceil((boxSize / 20) * material.doseFactor));
-
-      let status = "建議先進行小規模測試";
-      if (score >= 85) status = "適用性良好";
-      else if (score >= 70) status = "具有應用潛力";
-      else if (score < 55) status = "目前條件下不建議直接使用";
-
-      const factors = [
-        { name: "儲藏溫度", impact: Math.abs(temperature.scoreAdjust) },
-        { name: "箱體材質", impact: Math.abs(material.scoreAdjust) },
-        { name: "裝載密度", impact: Math.abs(densityAdjust) }
-      ].sort((a, b) => b.impact - a.impact);
-
-      const notes = [];
-      if (Number(temperature.value) >= 25) {
-        notes.push("常溫條件下作物代謝與產品釋放速率可能較快，建議縮短觀察間隔。");
-      }
-      if (material.value === "carton" || material.value === "plastic") {
-        notes.push("箱體可能存在通風或氣體逸散，實際效果需配合開孔率與密封程度評估。");
-      }
-      if (density > 0.5) {
-        notes.push("裝載密度偏高，建議確認產品在箱內的位置與氣體／有效成分分布。");
-      }
-      if (Number(temperature.value) === 0 && crop.value === "mango") {
-        notes.push("此作物可能對過低溫度敏感，請另行評估冷害風險。");
-      }
-      notes.push("正式建議應以對照組、重複試驗及實際品質指標驗證。");
-
-      return {
-        score,
-        status,
-        units,
-        duration: crop.duration,
-        densityText,
-        mainFactor: factors[0].name,
-        notes
-      };
-    }
-
-    /*
-      ========================================
-      3. 顯示結果
-      ========================================
-    */
     document.querySelector("#demoForm").addEventListener("submit", event => {
       event.preventDefault();
-      const result = calculateDemo();
+
+      const cropKey = cropEl.value;
+      const weight = document.querySelector("#weight").value;
+      const boxSize = document.querySelector("#boxSize").value;
+      const material = document.querySelector("#material").value;
+      const selectedTemperature = temperatureEl.value;
+      const data = cropData[cropKey];
+
+      const ppm = data.concentrationPpb / 1000;
 
       document.querySelector("#emptyState").hidden = true;
       document.querySelector("#resultContent").hidden = false;
-      document.querySelector("#statusText").textContent = `● ${result.status}`;
-      document.querySelector("#score").textContent = result.score;
-      document.querySelector("#meterFill").style.width = `${result.score}%`;
-      document.querySelector("#units").textContent = `${result.units} 個產品單位`;
-      document.querySelector("#duration").textContent = result.duration;
-      document.querySelector("#density").textContent = result.densityText;
-      document.querySelector("#mainFactor").textContent = result.mainFactor;
 
-      const notesEl = document.querySelector("#notes");
-      notesEl.innerHTML = "";
-      result.notes.forEach(note => {
-        const li = document.createElement("li");
-        li.textContent = note;
-        notesEl.appendChild(li);
-      });
+      document.querySelector("#ppmValue").textContent =
+        ppm.toFixed(5).replace(/0+$/, "").replace(/\.$/, "");
+      document.querySelector("#ppbValue").textContent =
+        `${data.concentrationPpb} ppb`;
+
+      document.querySelector("#daysValue").textContent = data.treatedDays;
+      document.querySelector("#qualityMetric").textContent =
+        `品質指標：${data.metric}`;
+
+      document.querySelector("#controlDays").textContent =
+        `${data.controlDays} 天`;
+      document.querySelector("#treatedDays").textContent =
+        `${data.treatedDays} 天`;
+      document.querySelector("#improvement").textContent =
+        data.improvement;
+
+      document.querySelector("#cropSummary").textContent = data.label;
+      document.querySelector("#fumigationHours").textContent =
+        `${data.fumigationHours} 小時`;
+      document.querySelector("#trialTemperature").textContent =
+        data.trialTemperature;
+      document.querySelector("#selectedTemperature").textContent =
+        selectedTemperature === "not-stated"
+          ? "文件未註明"
+          : `${selectedTemperature}°C`;
+      document.querySelector("#institution").textContent =
+        data.institution;
+      document.querySelector("#note").textContent =
+        data.note;
+      document.querySelector("#scenarioSummary").textContent =
+        `${weight} kg／${boxSize.replaceAll("x", " × ")} cm／${materialLabels[material]}`;
+
+      const warning = document.querySelector("#temperatureWarning");
+
+      if (selectedTemperature !== data.trialTemperatureValue) {
+        warning.hidden = false;
+        warning.textContent =
+          `注意：您選擇的儲藏溫度與文件試驗條件（${data.trialTemperature}）不同，` +
+          `因此 ${data.treatedDays} 天不可直接視為此溫度下的預期保存期限。`;
+      } else {
+        warning.hidden = true;
+        warning.textContent = "";
+      }
     });
   </script>
 </body>
 </html>
-<!-- redeploy -->
