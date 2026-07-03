@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="產品效益模擬器 Demo" />
+  <title>產品效益模擬器</title>
+  <style>
+    :root {
+      --bg: #f4f7f3;
+      --card: #ffffff;
+      --text: #183028;
+      --muted: #61736c;
+      --primary: #2d7a55;
+      --primary-dark: #205c40;
+      --border: #dce6df;
+      --soft: #eaf4ed;
+      --warning: #805b12;
+      --warning-bg: #fff6d8;
+      --shadow: 0 14px 35px rgba(24, 48, 40, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(74, 150, 106, 0.16), transparent 32%),
+        var(--bg);
+    }
+
+    .page {
+      width: min(1040px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 52px 0;
+    }
+
+    .hero {
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--primary);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      max-width: 720px;
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.8;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card {
+      padding: 28px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: var(--shadow);
+    }
+
+    .card h2 {
+      margin: 0 0 20px;
+      font-size: 1.25rem;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.92rem;
+      font-weight: 750;
+    }
+
+    select {
+      width: 100%;
+      padding: 13px 42px 13px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      background-color: #fff;
+      font: inherit;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(45, 122, 85, 0.13);
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 15px 18px;
+      border: 0;
+      border-radius: 14px;
+      color: white;
+      background: var(--primary);
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .result-empty {
+      display: grid;
+      min-height: 360px;
+      place-items: center;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.8;
+    }
+
+    .result-content[hidden] {
+      display: none;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--primary-dark);
+      font-size: 0.9rem;
+      font-weight: 800;
+    }
+
+    .score-row {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 24px 0 16px;
+    }
+
+    .score {
+      font-size: 3.3rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .score small {
+      margin-left: 4px;
+      color: var(--muted);
+      font-size: 1rem;
+      font-weight: 650;
+    }
+
+    .meter {
+      height: 12px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e4ebe6;
+    }
+
+    .meter-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #8abf72, #2d7a55);
+      transition: width 0.45s ease;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .metric {
+      padding: 16px;
+      border-radius: 16px;
+      background: var(--soft);
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 1.06rem;
+    }
+
+    .notes {
+      margin: 20px 0 0;
+      padding-left: 20px;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .notice {
+      margin-top: 24px;
+      padding: 14px 16px;
+      border: 1px solid #ead99b;
+      border-radius: 14px;
+      color: var(--warning);
+      background: var(--warning-bg);
+      font-size: 0.88rem;
+      line-height: 1.65;
+    }
+
+    footer {
+      margin-top: 26px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    @media (max-width: 780px) {
+      .page { padding: 32px 0; }
+      .layout { grid-template-columns: 1fr; }
+      .field-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .card { padding: 22px; border-radius: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <p class="eyebrow">Interactive Product Demo</p>
+      <h1>產品效益模擬器</h1>
+      <p class="subtitle">
+        選擇作物、裝箱重量、箱體大小、材質與儲藏溫度，
+        即可查看示範性的適用性評估與產品配置建議。
+      </p>
+    </header>
+
+    <section class="layout">
+      <form class="card" id="demoForm">
+        <h2>輸入使用條件</h2>
+
+        <div class="field-grid">
+          <div class="field full">
+            <label for="crop">作物</label>
+            <select id="crop" required></select>
+          </div>
+
+          <div class="field">
+            <label for="weight">作物重量</label>
+            <select id="weight" required></select>
+          </div>
+
+          <div class="field">
+            <label for="boxSize">箱子大小</label>
+            <select id="boxSize" required></select>
+          </div>
+
+          <div class="field">
+            <label for="material">箱子材質</label>
+            <select id="material" required></select>
+          </div>
+
+          <div class="field">
+            <label for="temperature">儲藏溫度</label>
+            <select id="temperature" required></select>
+          </div>
+        </div>
+
+        <button type="submit">查看模擬結果</button>
+
+        <div class="notice">
+          此版本使用示意參數，不能直接作為產品宣稱、標示、用量或保存期限依據。
+          正式公開前，請以實際試驗結果取代 JavaScript 中的示範公式。
+        </div>
+      </form>
+
+      <article class="card" aria-live="polite">
+        <div class="result-empty" id="emptyState">
+          <div>
+            <strong>尚未產生結果</strong><br />
+            請先選擇左側條件，再按下「查看模擬結果」。
+          </div>
+        </div>
+
+        <div class="result-content" id="resultContent" hidden>
+          <span class="status" id="statusText">● 適用性良好</span>
+
+          <div class="score-row">
+            <div>
+              <div class="score"><span id="score">0</span><small>/ 100</small></div>
+              <div style="margin-top:8px;color:var(--muted)">示範效益指數</div>
+            </div>
+          </div>
+
+          <div class="meter" aria-hidden="true">
+            <div class="meter-fill" id="meterFill"></div>
+          </div>
+
+          <div class="result-grid">
+            <div class="metric">
+              <span>建議產品數量</span>
+              <strong id="units">—</strong>
+            </div>
+            <div class="metric">
+              <span>預估適用期間</span>
+              <strong id="duration">—</strong>
+            </div>
+            <div class="metric">
+              <span>裝載密度</span>
+              <strong id="density">—</strong>
+            </div>
+            <div class="metric">
+              <span>主要影響因子</span>
+              <strong id="mainFactor">—</strong>
+            </div>
+          </div>
+
+          <ul class="notes" id="notes"></ul>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      Demo only · 請依產品試驗資料、標示與當地法規確認正式內容
+    </footer>
+  </main>
+
+  <script>
+    /*
+      ========================================
+      1. 下拉選單資料：可直接修改這一區
+      ========================================
+    */
+    const options = {
+      crops: [
+        { value: "grape", label: "葡萄", baseScore: 88, duration: "14–21 天" },
+        { value: "tomato", label: "番茄", baseScore: 82, duration: "10–14 天" },
+        { value: "mango", label: "芒果", baseScore: 80, duration: "10–14 天" },
+        { value: "pepper", label: "辣椒", baseScore: 84, duration: "14–21 天" },
+        { value: "broccoli", label: "青花菜", baseScore: 76, duration: "7–10 天" }
+      ],
+      weights: [2, 5, 10, 15, 20],
+      boxSizes: [10, 20, 30, 40, 60],
+      materials: [
+        { value: "carton", label: "瓦楞紙箱", scoreAdjust: -4, doseFactor: 1.15 },
+        { value: "plastic", label: "塑膠周轉箱", scoreAdjust: -2, doseFactor: 1.10 },
+        { value: "foam", label: "保麗龍箱", scoreAdjust: 5, doseFactor: 0.95 },
+        { value: "sealed", label: "高阻隔密封箱／袋", scoreAdjust: 8, doseFactor: 0.85 }
+      ],
+      temperatures: [
+        { value: 25, label: "25°C（常溫）", scoreAdjust: -12 },
+        { value: 15, label: "15°C", scoreAdjust: -5 },
+        { value: 10, label: "10°C", scoreAdjust: 1 },
+        { value: 5, label: "5°C", scoreAdjust: 6 },
+        { value: 0, label: "0°C", scoreAdjust: 4 }
+      ]
+    };
+
+    const cropEl = document.querySelector("#crop");
+    const weightEl = document.querySelector("#weight");
+    const boxSizeEl = document.querySelector("#boxSize");
+    const materialEl = document.querySelector("#material");
+    const temperatureEl = document.querySelector("#temperature");
+
+    function addOptions(select, items, getValue, getLabel) {
+      items.forEach(item => {
+        const option = document.createElement("option");
+        option.value = getValue(item);
+        option.textContent = getLabel(item);
+        select.appendChild(option);
+      });
+    }
+
+    addOptions(cropEl, options.crops, item => item.value, item => item.label);
+    addOptions(weightEl, options.weights, item => item, item => `${item} kg`);
+    addOptions(boxSizeEl, options.boxSizes, item => item, item => `${item} L`);
+    addOptions(materialEl, options.materials, item => item.value, item => item.label);
+    addOptions(
+      temperatureEl,
+      options.temperatures,
+      item => item.value,
+      item => item.label
+    );
+
+    /*
+      ========================================
+      2. 示範計算公式：正式使用時請換成試驗資料
+      ========================================
+    */
+    function calculateDemo() {
+      const crop = options.crops.find(item => item.value === cropEl.value);
+      const weight = Number(weightEl.value);
+      const boxSize = Number(boxSizeEl.value);
+      const material = options.materials.find(item => item.value === materialEl.value);
+      const temperature = options.temperatures.find(
+        item => item.value === Number(temperatureEl.value)
+      );
+
+      // kg/L。僅用於呈現裝載密度的概念。
+      const density = weight / boxSize;
+
+      let densityAdjust = 0;
+      let densityText = "中等";
+      if (density > 0.5) {
+        densityAdjust = -12;
+        densityText = "偏高";
+      } else if (density > 0.3) {
+        densityAdjust = -5;
+        densityText = "中高";
+      } else if (density < 0.12) {
+        densityAdjust = -3;
+        densityText = "偏低";
+      }
+
+      let score =
+        crop.baseScore +
+        material.scoreAdjust +
+        temperature.scoreAdjust +
+        densityAdjust;
+
+      score = Math.max(35, Math.min(98, Math.round(score)));
+
+      // 假設每 20 L 使用一個產品單位；材質會影響示範用量。
+      const units = Math.max(1, Math.ceil((boxSize / 20) * material.doseFactor));
+
+      let status = "建議先進行小規模測試";
+      if (score >= 85) status = "適用性良好";
+      else if (score >= 70) status = "具有應用潛力";
+      else if (score < 55) status = "目前條件下不建議直接使用";
+
+      const factors = [
+        { name: "儲藏溫度", impact: Math.abs(temperature.scoreAdjust) },
+        { name: "箱體材質", impact: Math.abs(material.scoreAdjust) },
+        { name: "裝載密度", impact: Math.abs(densityAdjust) }
+      ].sort((a, b) => b.impact - a.impact);
+
+      const notes = [];
+      if (Number(temperature.value) >= 25) {
+        notes.push("常溫條件下作物代謝與產品釋放速率可能較快，建議縮短觀察間隔。");
+      }
+      if (material.value === "carton" || material.value === "plastic") {
+        notes.push("箱體可能存在通風或氣體逸散，實際效果需配合開孔率與密封程度評估。");
+      }
+      if (density > 0.5) {
+        notes.push("裝載密度偏高，建議確認產品在箱內的位置與氣體／有效成分分布。");
+      }
+      if (Number(temperature.value) === 0 && crop.value === "mango") {
+        notes.push("此作物可能對過低溫度敏感，請另行評估冷害風險。");
+      }
+      notes.push("正式建議應以對照組、重複試驗及實際品質指標驗證。");
+
+      return {
+        score,
+        status,
+        units,
+        duration: crop.duration,
+        densityText,
+        mainFactor: factors[0].name,
+        notes
+      };
+    }
+
+    /*
+      ========================================
+      3. 顯示結果
+      ========================================
+    */
+    document.querySelector("#demoForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const result = calculateDemo();
+
+      document.querySelector("#emptyState").hidden = true;
+      document.querySelector("#resultContent").hidden = false;
+      document.querySelector("#statusText").textContent = `● ${result.status}`;
+      document.querySelector("#score").textContent = result.score;
+      document.querySelector("#meterFill").style.width = `${result.score}%`;
+      document.querySelector("#units").textContent = `${result.units} 個產品單位`;
+      document.querySelector("#duration").textContent = result.duration;
+      document.querySelector("#density").textContent = result.densityText;
+      document.querySelector("#mainFactor").textContent = result.mainFactor;
+
+      const notesEl = document.querySelector("#notes");
+      notesEl.innerHTML = "";
+      result.notes.forEach(note => {
+        const li = document.createElement("li");
+        li.textContent = note;
+        notesEl.appendChild(li);
+      });
+    });
+  </script>
+</body>
+</html>
